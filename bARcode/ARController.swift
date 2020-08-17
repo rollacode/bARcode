@@ -33,7 +33,7 @@ class ARController: UIViewController {
 
         sceneView.session.run(ARWorldTrackingConfiguration.projectDefault)
         sceneView.session.delegate = self
-        sceneView.showsStatistics = true
+//        sceneView.showsStatistics = true
         sceneView.scene.physicsWorld.contactDelegate = self
         UIApplication.shared.isIdleTimerDisabled = true
         
@@ -66,13 +66,13 @@ class ARController: UIViewController {
     //===========================================
     
     @objc private func displayLinkHandler() {
-        guard !self.barcodesProcessing else { return }
-        
-        self.startBarcodeProcessing()
         self.createBarcodeDetectionRequest()
     }
     
     private func createBarcodeDetectionRequest() {
+        guard !self.barcodesProcessing else { return }
+        self.startBarcodeProcessing()
+
         let request = VNDetectBarcodesRequest(completionHandler: self.createOrUpdateBarcode)
         request.symbologies = [.QR, .UPCE, .I2of5, .I2of5Checksum,
                                .Aztec, .Code128, .Code39, .Code39Checksum,
@@ -105,10 +105,8 @@ class ARController: UIViewController {
                             self.endBarcodeProcessing()
                             return
                     }
-                    
-                    let rect = result.boundingBox
-                    
-                    guard let hitCenter = self.firstHit(from: rect.center) else {
+
+                    guard let hitCenter = self.firstHit(from: result.boundingBox.center) else {
                         self.endBarcodeProcessing()
                         return
                     }
@@ -143,6 +141,13 @@ class ARController: UIViewController {
     private func endBarcodeProcessing() {
         self.barcodesProcessing = false
     }
+}
+
+//===========================================
+// MARK: - Shoot -
+//===========================================
+
+extension ARController: SCNPhysicsContactDelegate {
     
     @objc private func shoot() {
         let arBullet = ARBullet()
@@ -153,6 +158,30 @@ class ARController: UIViewController {
 
         arBullet.physicsBody?.applyForce(dir, asImpulse: true)
         sceneView.scene.rootNode.addChildNode(arBullet)
+        
+        //Destroy old bullets
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { [weak arBullet] (timer) in
+            arBullet?.removeFromParentNode()
+        }
+    }
+    
+    
+    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
+        guard let nodeABitMask = contact.nodeA.physicsBody?.categoryBitMask,
+            let nodeBBitMask = contact.nodeB.physicsBody?.categoryBitMask,
+            nodeABitMask & nodeBBitMask == CollisionCategory.codes.rawValue & CollisionCategory.bullets.rawValue else { return }
+
+        if let node = contact.nodeA as? BarCodePlane ?? contact.nodeB as? BarCodePlane {
+            node.isRead ? node.unread() : node.read()
+            
+            DispatchQueue.main.async {
+                self.scanInfoLabel.text = "scanned: \(node.payload)"
+            }
+        }
+        
+        if let node = contact.nodeA as? ARBullet ?? contact.nodeB as? ARBullet {
+            node.removeFromParentNode()
+        }
     }
 }
 
@@ -160,7 +189,7 @@ class ARController: UIViewController {
 // MARK: - Delegates -
 //===========================================
 
-extension ARController: ARSCNViewDelegate, ARSessionDelegate, SCNPhysicsContactDelegate {
+extension ARController: ARSCNViewDelegate, ARSessionDelegate {
     // MARK: - ARSessionDelegate
 
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
@@ -182,7 +211,6 @@ extension ARController: ARSCNViewDelegate, ARSessionDelegate, SCNPhysicsContactD
     }
 
     // MARK: - ARSessionObserver
-
     func sessionWasInterrupted(_ session: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay.
         sessionInfoLabel.text = "Session was interrupted"
@@ -197,6 +225,7 @@ extension ARController: ARSCNViewDelegate, ARSessionDelegate, SCNPhysicsContactD
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         sessionInfoLabel.text = "Session failed: \(error.localizedDescription)"
+        sessionInfoView.isHidden = false
         guard error is ARError else { return }
         
         let errorWithInfo = error as NSError
@@ -261,24 +290,6 @@ extension ARController: ARSCNViewDelegate, ARSessionDelegate, SCNPhysicsContactD
         sessionInfoLabel.text = message
         sessionInfoView.isHidden = message.isEmpty
     }
-    
-    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        guard let nodeABitMask = contact.nodeA.physicsBody?.categoryBitMask,
-            let nodeBBitMask = contact.nodeB.physicsBody?.categoryBitMask,
-            nodeABitMask & nodeBBitMask == CollisionCategory.codes.rawValue & CollisionCategory.bullets.rawValue else { return }
-
-        if let node = contact.nodeA as? BarCodePlane ?? contact.nodeB as? BarCodePlane {
-            node.isRead ? node.unread() : node.read()
-            
-            DispatchQueue.main.async {
-                self.scanInfoLabel.text = "scanned: \(node.payload)"
-            }
-        }
-        
-        if let node = contact.nodeA as? ARBullet ?? contact.nodeB as? ARBullet {
-            node.removeFromParentNode()
-        }
-    }
 }
 
 
@@ -295,22 +306,10 @@ private extension ARController {
     }
     
     func firstHit(from point: CGPoint) -> ARRaycastResult? {
-        let bounds = CGPoint(x: self.sceneView.bounds.width * point.y, y: self.sceneView.bounds.height * point.x)
+        let bounds = CGPoint(x: self.sceneView.bounds.width, y: self.sceneView.bounds.height)
+            * CGPoint(x: point.y, y: point.x)
         guard let query = self.sceneView.raycastQuery(from: bounds, allowing: .estimatedPlane, alignment: .any) else { return nil }
         return self.sceneView.session.raycast(query).first
-    }
-}
-
-
-private extension CGRect {
-    
-    var flip: CGRect {
-        let rect = self.applying(CGAffineTransform(scaleX: 1, y: -1))
-        return rect.applying(CGAffineTransform(translationX: 0, y: 1))
-    }
-    
-    var center: CGPoint {
-        return CGPoint(x: self.midX, y: self.midY)
     }
 }
 

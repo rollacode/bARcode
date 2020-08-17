@@ -37,11 +37,7 @@ class BarCodePlane: SCNNode {
         self.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.static, shape: SCNPhysicsShape.init(geometry: meshNode, options: [:]))
         self.physicsBody?.categoryBitMask = CollisionCategory.codes.rawValue
         self.physicsBody?.contactTestBitMask = CollisionCategory.bullets.rawValue
-        self.applyCurrentState()
-    }
-    
-    private func applyCurrentState() {
-        self.isRead ? read() : unread()
+        self.unread()
     }
     
     func setPosition(with raycastResult: ARRaycastResult) {
@@ -77,6 +73,7 @@ class BarCodePlane: SCNNode {
         self.simdPosition = average
     }
     
+    ///Mark current barcode plane as read
     func read() {
        guard let material = self.geometry?.firstMaterial
             else { fatalError("ARSCNPlaneGeometry always has one material") }
@@ -85,6 +82,7 @@ class BarCodePlane: SCNNode {
         self.isRead = true
     }
     
+    ///Mark current barcode plane as unread
     func unread() {
         guard let material = self.geometry?.firstMaterial
             else { fatalError("ARSCNPlaneGeometry always has one material") }
@@ -104,14 +102,9 @@ class ARBullet: SCNNode {
         let shape = SCNPhysicsShape(geometry: arKitBox, options: nil)
         self.physicsBody = SCNPhysicsBody(type: .dynamic, shape: shape)
         self.physicsBody?.isAffectedByGravity = false
-
+        // Bullets will affect only barcode planes
         self.physicsBody?.categoryBitMask = CollisionCategory.bullets.rawValue
         self.physicsBody?.contactTestBitMask = CollisionCategory.codes.rawValue
-
-        // add texture
-        let material = SCNMaterial()
-        material.diffuse.contents = UIImage(named: "art.scnassets/ARKit_logo.png")
-        self.geometry?.materials  = [material]
     }
 
     required init?(coder aDecoder: NSCoder) {

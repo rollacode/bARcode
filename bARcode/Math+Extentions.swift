@@ -224,6 +224,18 @@ public func SCNVector3Project(vectorToProject: SCNVector3, projectionVector: SCN
     return v
 }
 
+
+public func * (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x * right.x, y: left.y * right.y)
+}
+
+
+extension CGRect {
+    var center: CGPoint {
+        return CGPoint(x: self.midX, y: self.midY)
+    }
+}
+
 extension float4x4 {
     /**
      Treats matrix as a (right-hand column-major convention) transform matrix
