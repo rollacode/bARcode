@@ -7,19 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD57981C24E26BAB003C9A3A /* Math+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD57981B24E26BAB003C9A3A /* Math+Extentions.swift */; };
+		CD57981F24E26C33003C9A3A /* VisionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD57981E24E26C33003C9A3A /* VisionKit.framework */; };
+		CD57982124E31958003C9A3A /* BarCodePlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD57982024E31958003C9A3A /* BarCodePlane.swift */; };
+		CD57982524E3BE97003C9A3A /* Assets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = CD57982424E3BE97003C9A3A /* Assets.scnassets */; };
 		CDE16AF824DC6AEB00F1E7AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE16AF724DC6AEB00F1E7AF /* AppDelegate.swift */; };
-		CDE16AFA24DC6AEB00F1E7AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE16AF924DC6AEB00F1E7AF /* ViewController.swift */; };
-		CDE16AFC24DC6AEB00F1E7AF /* Experience.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = CDE16AFB24DC6AEB00F1E7AF /* Experience.rcproject */; };
+		CDE16AFA24DC6AEB00F1E7AF /* ARController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE16AF924DC6AEB00F1E7AF /* ARController.swift */; };
 		CDE16AFF24DC6AEB00F1E7AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDE16AFD24DC6AEB00F1E7AF /* Main.storyboard */; };
 		CDE16B0124DC6AED00F1E7AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDE16B0024DC6AED00F1E7AF /* Assets.xcassets */; };
 		CDE16B0424DC6AED00F1E7AF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDE16B0224DC6AED00F1E7AF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CD57981B24E26BAB003C9A3A /* Math+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Math+Extentions.swift"; sourceTree = "<group>"; };
+		CD57981E24E26C33003C9A3A /* VisionKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VisionKit.framework; path = System/Library/Frameworks/VisionKit.framework; sourceTree = SDKROOT; };
+		CD57982024E31958003C9A3A /* BarCodePlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarCodePlane.swift; sourceTree = "<group>"; };
+		CD57982424E3BE97003C9A3A /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
 		CDE16AF424DC6AEB00F1E7AF /* bARcode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bARcode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDE16AF724DC6AEB00F1E7AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		CDE16AF924DC6AEB00F1E7AF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		CDE16AFB24DC6AEB00F1E7AF /* Experience.rcproject */ = {isa = PBXFileReference; lastKnownFileType = file.rcproject; path = Experience.rcproject; sourceTree = "<group>"; };
+		CDE16AF924DC6AEB00F1E7AF /* ARController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARController.swift; sourceTree = "<group>"; };
 		CDE16AFE24DC6AEB00F1E7AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CDE16B0024DC6AED00F1E7AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CDE16B0324DC6AED00F1E7AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -31,17 +37,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD57981F24E26C33003C9A3A /* VisionKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD57981D24E26C32003C9A3A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CD57981E24E26C33003C9A3A /* VisionKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CDE16AEB24DC6AEB00F1E7AF = {
 			isa = PBXGroup;
 			children = (
 				CDE16AF624DC6AEB00F1E7AF /* bARcode */,
 				CDE16AF524DC6AEB00F1E7AF /* Products */,
+				CD57981D24E26C32003C9A3A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,9 +73,11 @@
 			isa = PBXGroup;
 			children = (
 				CDE16AF724DC6AEB00F1E7AF /* AppDelegate.swift */,
-				CDE16AF924DC6AEB00F1E7AF /* ViewController.swift */,
-				CDE16AFB24DC6AEB00F1E7AF /* Experience.rcproject */,
+				CDE16AF924DC6AEB00F1E7AF /* ARController.swift */,
+				CD57982024E31958003C9A3A /* BarCodePlane.swift */,
+				CD57981B24E26BAB003C9A3A /* Math+Extentions.swift */,
 				CDE16AFD24DC6AEB00F1E7AF /* Main.storyboard */,
+				CD57982424E3BE97003C9A3A /* Assets.scnassets */,
 				CDE16B0024DC6AED00F1E7AF /* Assets.xcassets */,
 				CDE16B0224DC6AED00F1E7AF /* LaunchScreen.storyboard */,
 				CDE16B0524DC6AED00F1E7AF /* Info.plist */,
@@ -125,6 +143,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD57982524E3BE97003C9A3A /* Assets.scnassets in Resources */,
 				CDE16B0424DC6AED00F1E7AF /* LaunchScreen.storyboard in Resources */,
 				CDE16B0124DC6AED00F1E7AF /* Assets.xcassets in Resources */,
 				CDE16AFF24DC6AEB00F1E7AF /* Main.storyboard in Resources */,
@@ -138,9 +157,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDE16AFA24DC6AEB00F1E7AF /* ViewController.swift in Sources */,
+				CDE16AFA24DC6AEB00F1E7AF /* ARController.swift in Sources */,
+				CD57981C24E26BAB003C9A3A /* Math+Extentions.swift in Sources */,
+				CD57982124E31958003C9A3A /* BarCodePlane.swift in Sources */,
 				CDE16AF824DC6AEB00F1E7AF /* AppDelegate.swift in Sources */,
-				CDE16AFC24DC6AEB00F1E7AF /* Experience.rcproject in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +307,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7XUN9ZRRL6;
 				INFOPLIST_FILE = bARcode/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -305,6 +326,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7XUN9ZRRL6;
 				INFOPLIST_FILE = bARcode/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
